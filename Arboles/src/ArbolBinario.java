@@ -51,16 +51,46 @@ class Arbol {
         return raiz;
     }
 
+    public void eliminar(int valor) {
+        raiz = eliminarRec(raiz, valor);
+    }
+
+    private Nodo eliminarRec(Nodo nodo, int valor) {
+        if (nodo == null) {
+            return nodo;
+        }
+
+        if (valor < nodo.dato) {
+            nodo.izq = eliminarRec(nodo.izq, valor);
+        } else if (valor > nodo.dato) {
+            nodo.der = eliminarRec(nodo.der, valor);
+        } else {
+            // Nodo con un solo hijo o sin hijos
+            if (nodo.izq == null) {
+                return nodo.der;
+            } else if (nodo.der == null) {
+                return nodo.izq;
+            }
+            // Nodo con dos hijos, encontrar el sucesor inorden
+            nodo.dato = encontrarMinimoValor(nodo.der);
+            // Eliminar el sucesor inorden
+            nodo.der = eliminarRec(nodo.der, nodo.dato);
+        }
+        return nodo;
+    }
+
+    private int encontrarMinimoValor(Nodo nodo) {
+        int minimoValor = nodo.dato;
+        while (nodo.izq != null) {
+            minimoValor = nodo.izq.dato;
+            nodo = nodo.izq;
+        }
+        return minimoValor;
+    }
+
+
     public void inOrden() {
         recorrerInOrden(raiz);
-    }
-
-    public void preOrden() {
-        recorrerPreOrden(raiz);
-    }
-
-    public void postOrden() {
-        recorrerPostOrden(raiz);
     }
 
     public void recorrerInOrden(Nodo aux) {
@@ -71,12 +101,20 @@ class Arbol {
         }
     }
 
+    public void preOrden() {
+        recorrerPreOrden(raiz);
+    }
+
     public void recorrerPreOrden(Nodo aux) {
         if (aux != null) {
             System.out.print(aux.dato + " ");
             recorrerPreOrden(aux.izq);
             recorrerPreOrden(aux.der);
         }
+    }
+
+    public void postOrden() {
+        recorrerPostOrden(raiz);
     }
 
     public void recorrerPostOrden(Nodo aux) {
@@ -108,6 +146,10 @@ public class ArbolBinario {
         arbol.postOrden();
         System.out.println("\nCantidad de nodos: " + arbol.getCantidadNodos());
         System.out.println("Cantidad de niveles: " + arbol.getCantidadNiveles());
+        int valorAEliminar = 30;
+        arbol.eliminar(valorAEliminar);
+        System.out.println("Recorrido Inorden del árbol después de eliminar el valor " + valorAEliminar + ":");
+        arbol.inOrden();
     }
 }
 
