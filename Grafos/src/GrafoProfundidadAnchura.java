@@ -54,6 +54,7 @@ public class GrafoProfundidadAnchura {
                         colaPrioridad.add(new int[]{nodo, peso + pesoActual});
                     }
                 }
+
             }
         }
     }
